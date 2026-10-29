@@ -1,0 +1,21 @@
+import { useEffect, useState } from "react";
+
+// State jo browser ki localStorage mein save hoti hai (refresh par bhi bachi rehti hai)
+export default function useStoredState(key, initial) {
+  const [value, setValue] = useState(() => {
+    try {
+      const saved = localStorage.getItem(key);
+      return saved ? JSON.parse(saved) : initial;
+    } catch {
+      return initial;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {}
+  }, [key, value]);
+
+  return [value, setValue];
+}
